@@ -1,0 +1,3 @@
+# Backups hold your personal schedule — keep them out of the repo.
+yoman-backup*.json
+*.backup.json

@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>יומן</title>
+<meta name="description" content="הלו״ז השבועי והיומי שלי">
+<meta name="theme-color" content="#EDF1F5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="יומן">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=Karantina:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EDF1F5; --surface:#FFFFFF; --ink:#13203A; --muted:#56647C; --line:#D2DAE4; --tint:13%;
+  --danger:#C22F2F; --shadow:0 1px 2px rgba(19,32,58,.06), 0 6px 20px rgba(19,32,58,.08);
+  --p-amber:#B87B05; --p-orange:#C85A12; --p-red:#CF3535; --p-pink:#C02F7E;
+  --p-violet:#6A42C4; --p-blue:#2560D6; --p-cyan:#0A7EA3; --p-teal:#11866F;
+  --p-green:#3C8A1F; --p-brown:#8B5A36; --p-slate:#3A4866; --p-gray:#8E9AAD;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0D1524; --surface:#152038; --ink:#E6ECF5; --muted:#9AA8BF; --line:#253250; --tint:20%;
+    --danger:#FF7070; --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    --p-amber:#F0B23C; --p-orange:#FF9550; --p-red:#FF6E6E; --p-pink:#F57BBF;
+    --p-violet:#A98AF6; --p-blue:#6F9BFF; --p-cyan:#4CC4EA; --p-teal:#3DCBA9;
+    --p-green:#7DCB57; --p-brown:#C99A72; --p-slate:#93A1C6; --p-gray:#66738B;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0D1524; --surface:#152038; --ink:#E6ECF5; --muted:#9AA8BF; --line:#253250; --tint:20%;
+  --danger:#FF7070; --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  --p-amber:#F0B23C; --p-orange:#FF9550; --p-red:#FF6E6E; --p-pink:#F57BBF;
+  --p-violet:#A98AF6; --p-blue:#6F9BFF; --p-cyan:#4CC4EA; --p-teal:#3DCBA9;
+  --p-green:#7DCB57; --p-brown:#C99A72; --p-slate:#93A1C6; --p-gray:#66738B;
+}
+*,*::before,*::after{box-sizing:border-box;}
+[hidden]{display:none !important;}
+html{-webkit-text-size-adjust:100%; background:var(--bg);}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"IBM Plex Sans Hebrew","Arial Hebrew","Segoe UI",Arial,sans-serif;
+  font-size:16px; line-height:1.5;
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  -webkit-tap-highlight-color:transparent;
+}
+button,input,select,textarea{font:inherit; color:inherit;}
+button{cursor:pointer;}
+:focus-visible{outline:3px solid var(--p-blue); outline-offset:2px;}
+.wrap{max-width:560px; margin:0 auto; padding:0 16px;}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+.muted{color:var(--muted);}
+
+/* buttons */
+.icon-btn{
+  -webkit-appearance:none; appearance:none; border:0; background:var(--surface); color:var(--ink);
+  width:42px; height:42px; border-radius:12px; display:grid; place-items:center; flex:none;
+}
+.icon-btn svg{width:22px; height:22px;}
+.btn{
+  -webkit-appearance:none; appearance:none; border:1px solid var(--line); background:var(--surface);
+  border-radius:12px; padding:11px 16px; font-weight:600; min-height:46px;
+  display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+}
+.btn.primary{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+.btn.danger{color:var(--danger);}
+.btn.ghost{background:transparent; border-color:transparent; color:var(--muted);}
+.btn-add{
+  -webkit-appearance:none; appearance:none; width:100%; min-height:48px; margin-top:6px;
+  border:1.5px dashed var(--line); background:transparent; color:var(--ink);
+  border-radius:14px; font-weight:600; padding:10px 14px;
+}
+.link{-webkit-appearance:none; appearance:none; border:0; background:none; padding:0; font-weight:600; text-decoration:underline; text-underline-offset:3px;}
+
+/* header */
+.top{
+  position:sticky; top:0; z-index:10; background:var(--bg);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.topbar{display:flex; align-items:center; gap:10px; padding:10px 0 4px;}
+.month{
+  -webkit-appearance:none; appearance:none; border:0; background:none; padding:4px 2px;
+  flex:1; min-width:0; display:flex; align-items:center; gap:4px; text-align:start;
+  font-weight:700; font-size:1.2rem;
+}
+.month svg{width:18px; height:18px; color:var(--muted); transition:transform .2s;}
+.month[aria-expanded="true"] svg{transform:rotate(180deg);}
+.quick{display:flex; background:var(--surface); border-radius:12px; padding:3px; flex:none;}
+.quick button{
+  -webkit-appearance:none; appearance:none; border:0; background:none;
+  font-weight:600; font-size:.92rem; padding:7px 13px; border-radius:9px; min-height:36px;
+}
+.quick button[aria-pressed="true"]{background:var(--ink); color:var(--bg);}
+
+.weekbar{display:flex; align-items:stretch; gap:2px; padding:6px 0 10px;}
+.arrow{
+  -webkit-appearance:none; appearance:none; border:0; background:none; color:var(--muted);
+  width:26px; flex:none; display:grid; place-items:center; padding:0; border-radius:8px;
+}
+.arrow svg{width:18px; height:18px;}
+.strip{flex:1; display:grid; grid-template-columns:repeat(7,1fr); gap:4px; min-width:0;}
+.tab{
+  -webkit-appearance:none; appearance:none; border:0; position:relative;
+  background:var(--surface); border-radius:12px; min-height:58px; padding:6px 0 7px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+}
+.tab .wl{font-size:.74rem; font-weight:600; color:var(--muted); line-height:1.2;}
+.tab .dn{font-size:1.08rem; font-weight:700; line-height:1.2; font-variant-numeric:tabular-nums;}
+.tab .dot{width:6px; height:6px; border-radius:50%; background:var(--c); margin-top:3px;}
+.tab .mk{
+  position:absolute; top:5px; left:5px; width:7px; height:7px; border-radius:50%;
+  border:1.5px solid var(--ink);
+}
+.tab.is-today{box-shadow:inset 0 0 0 2px var(--ink);}
+.tab[aria-selected="true"]{background:var(--ink); color:var(--bg); box-shadow:none;}
+.tab[aria-selected="true"] .wl{color:var(--bg); opacity:.75;}
+.tab[aria-selected="true"] .mk{border-color:var(--bg);}
+
+/* month grid */
+.monthgrid{background:var(--surface); border-radius:16px; padding:10px 10px 12px; margin:0 0 12px; box-shadow:var(--shadow);}
+.mg-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;}
+.mg-head strong{font-size:1.02rem;}
+.mg-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:2px; text-align:center;}
+.mg-wl{font-size:.75rem; font-weight:600; color:var(--muted); padding:4px 0;}
+.mg-cell{
+  -webkit-appearance:none; appearance:none; border:0; background:none; position:relative;
+  min-height:42px; border-radius:10px; font-weight:600; font-variant-numeric:tabular-nums;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+}
+.mg-cell .dot{width:5px; height:5px; border-radius:50%; background:var(--c);}
+.mg-cell.is-today{box-shadow:inset 0 0 0 2px var(--ink);}
+.mg-cell.is-sel{background:var(--ink); color:var(--bg);}
+.mg-cell .mk{position:absolute; top:4px; left:6px; width:6px; height:6px; border-radius:50%; border:1.5px solid currentColor;}
+
+/* day */
+main{padding-bottom:40px;}
+.dayhead{padding:6px 2px 2px;}
+.dayline{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.dayname{font-size:1.75rem; font-weight:700; margin:0; line-height:1.2;}
+.chip{font-size:.8rem; font-weight:600; padding:2px 10px; border-radius:99px; background:var(--ink); color:var(--bg);}
+.datefull{margin:0; color:var(--muted); font-size:.95rem;}
+.daytype{margin:4px 0 0;}
+.changed{
+  display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+  margin:12px 0 0; padding:9px 12px; border-radius:12px;
+  background:var(--surface); border:1px dashed var(--line); font-size:.92rem;
+}
+
+/* now card */
+.now{
+  margin:14px 0 18px; padding:16px 18px 18px; border-radius:20px;
+  background:color-mix(in srgb, var(--c) var(--tint), var(--surface));
+  border:1px solid color-mix(in srgb, var(--c) 35%, transparent);
+}
+.now-label{font-size:.9rem; font-weight:500; color:var(--muted);}
+.now-title{
+  font-family:"Karantina","Arial Narrow","Arial Hebrew",sans-serif; font-weight:700;
+  font-size:clamp(3rem,15vw,4.4rem); line-height:.9; margin:.12em 0 .1em; overflow-wrap:anywhere;
+}
+.now-note{color:var(--muted); margin-bottom:10px;}
+.bar{height:8px; border-radius:99px; background:color-mix(in srgb, var(--c) 22%, transparent); overflow:hidden; margin:4px 0 10px;}
+.bar span{display:block; height:100%; background:var(--c); border-radius:99px;}
+.now-time{font-weight:600; font-variant-numeric:tabular-nums;}
+.now-next{
+  margin-top:10px; padding-top:10px; border-top:1px solid color-mix(in srgb, var(--c) 30%, transparent);
+  color:var(--muted); font-size:.95rem;
+}
+
+/* timeline */
+.timeline{list-style:none; margin:14px 0 0; padding:0;}
+.row{display:grid; grid-template-columns:3.3rem 1.4rem 1fr; column-gap:.45rem;}
+.time{padding-top:.42rem; display:flex; flex-direction:column; font-variant-numeric:tabular-nums;}
+.t1{font-weight:600;}
+.t2{font-size:.8rem; color:var(--muted);}
+.tl{font-size:.8rem; font-weight:600; line-height:1.25; color:var(--muted);}
+.wire{position:relative;}
+.wire::before{
+  content:""; position:absolute; top:0; bottom:0; left:50%; width:3px; margin-left:-1.5px; background:var(--c);
+}
+.row.transit .wire::before{background:repeating-linear-gradient(to bottom, var(--c) 0 5px, transparent 5px 10px);}
+.row:first-child .wire::before{top:.85rem;}
+.row:last-child .wire::before{bottom:auto; height:1.3rem;}
+.node{
+  position:absolute; top:.72rem; left:50%; width:14px; height:14px; margin-left:-7px;
+  border-radius:50%; background:var(--bg); border:3px solid var(--c);
+}
+.row.current .node{background:var(--c); box-shadow:0 0 0 5px color-mix(in srgb, var(--c) 28%, transparent);}
+.body{
+  -webkit-appearance:none; appearance:none; border:0; background:none; width:100%;
+  display:block; text-align:start; padding:.4rem .7rem .95rem; border-radius:12px;
+}
+.body > span{display:block;}
+.body:active{background:color-mix(in srgb, var(--c) 12%, transparent);}
+@media (hover:hover){ .body:hover{background:color-mix(in srgb, var(--c) 8%, transparent);} }
+.row.current .body{background:color-mix(in srgb, var(--c) var(--tint), var(--surface));}
+.title{font-weight:600; font-size:1.05rem;}
+.row.minor .title{font-weight:500; color:var(--muted);}
+.note{color:var(--muted); font-size:.9rem;}
+.dur{color:var(--muted); font-size:.8rem; margin-top:2px;}
+.tag{
+  display:inline-block; vertical-align:2px; margin-inline-start:6px; font-size:.7rem; font-weight:600;
+  padding:0 7px; border-radius:99px; border:1px solid var(--line); color:var(--muted); line-height:1.6;
+}
+.row.past{opacity:.42;}
+.empty{color:var(--muted); padding:18px 4px; text-align:center;}
+
+.dayactions{display:flex; gap:8px; margin-top:8px;}
+.dayactions .btn-add{margin-top:0; flex:1;}
+.dayactions .more{
+  -webkit-appearance:none; appearance:none; flex:none; width:52px; min-height:48px; border-radius:14px;
+  border:1.5px solid var(--line); background:transparent; display:grid; place-items:center;
+}
+.dayactions .more svg{width:22px; height:22px;}
+.hint{color:var(--muted); font-size:.85rem; margin:10px 2px 0;}
+
+.foot{margin-top:22px; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:.92rem;}
+.foot p{margin:0 0 4px;}
+.foot strong{color:var(--ink);}
+.remind{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-top:14px; padding:10px 12px; border-radius:12px; background:var(--surface); color:var(--ink); font-size:.9rem;
+}
+
+/* welcome */
+.welcome{padding:30px 2px 0; display:grid; gap:10px;}
+.welcome h2{font-family:"Karantina","Arial Narrow",sans-serif; font-size:4rem; line-height:.9; margin:0;}
+.welcome p{margin:0 0 6px;}
+
+/* pages */
+.page{position:fixed; inset:0; z-index:20; background:var(--bg); overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;}
+html.page-open, html.page-open body{overflow:hidden;}
+.page-head{position:sticky; top:0; z-index:2; background:var(--bg); padding-top:env(safe-area-inset-top,0px);}
+.ph-in{display:flex; align-items:center; gap:12px; padding-top:10px; padding-bottom:10px;}
+.ph-in h2{margin:0; font-size:1.3rem;}
+.page-body{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px));}
+.lead{margin:4px 2px 14px; color:var(--muted);}
+.card{background:var(--surface); border-radius:16px; padding:14px; margin-bottom:12px; display:grid; gap:10px;}
+.card h3{margin:0; font-size:1.05rem;}
+.card p{margin:0;}
+.fld{display:grid; gap:4px; font-weight:600; font-size:.9rem;}
+.in{
+  width:100%; min-height:44px; border-radius:10px; border:1px solid var(--line);
+  background:var(--bg); padding:9px 12px; font-size:16px; font-weight:400;
+}
+textarea.in{min-height:84px; resize:vertical;}
+select.in{-webkit-appearance:none; appearance:none;}
+.pg-day{margin:14px 2px 2px; font-size:1.5rem;}
+.fixed-tabs{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+.fixed-tabs .tab{min-height:50px;}
+.row-inline{display:flex; gap:8px; align-items:center;}
+.row-inline .in{flex:1;}
+.row-inline .btn{width:auto; flex:none;}
+.summary{margin-top:18px; padding-top:14px; border-top:1px solid var(--line); color:var(--muted); font-size:.92rem;}
+.summary p{margin:0 0 4px;}
+.summary strong{color:var(--ink);}
+
+/* categories */
+.cat-top{display:flex; align-items:center; gap:10px;}
+.cat-top .sw{width:16px; height:16px; border-radius:50%; background:var(--c); flex:none;}
+.cat-top .in{flex:1;}
+.mini{
+  -webkit-appearance:none; appearance:none; border:0; background:none; font-weight:600; font-size:.88rem;
+  padding:8px 6px; flex:none;
+}
+.mini.danger{color:var(--danger);}
+.swatches{display:flex; flex-wrap:wrap; gap:8px;}
+.swb{
+  -webkit-appearance:none; appearance:none; width:28px; height:28px; border-radius:50%;
+  border:0; background:var(--s); padding:0;
+}
+.swb.on{box-shadow:0 0 0 2px var(--surface), 0 0 0 4px var(--s);}
+.flags{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:.9rem;}
+.chk{display:flex; align-items:center; gap:6px;}
+.chk input{width:18px; height:18px; margin:0; accent-color:var(--ink);}
+
+/* dialogs */
+dialog{border:0; padding:0; background:var(--surface); color:var(--ink); max-width:none; max-height:none;}
+dialog::backdrop{background:rgba(5,10,20,.5);}
+.sheet{
+  width:100%; max-width:560px; margin:auto auto 0; border-radius:22px 22px 0 0;
+  max-height:94vh; max-height:94dvh; overflow:auto;
+}
+@media (min-width:600px){ .sheet{margin:auto; border-radius:22px;} }
+.sheet-in{padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px)); display:grid; gap:14px;}
+.grip{width:40px; height:5px; border-radius:99px; background:var(--line); margin:-6px auto 0;}
+.sheet h3{margin:0; font-size:1.2rem; outline:none;}
+.scope{margin:2px 0 0; font-size:.88rem; color:var(--muted);}
+.scope.fixed{color:var(--p-amber); font-weight:600;}
+.times{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+.tf{display:grid; gap:4px; font-weight:600; font-size:.9rem;}
+.tf .lbl{display:flex; justify-content:space-between; align-items:center;}
+.tf .clr{-webkit-appearance:none; appearance:none; border:0; background:none; padding:0 2px; font-size:.8rem; color:var(--muted); text-decoration:underline;}
+input[type="time"].in{direction:ltr; text-align:center; min-width:0;}
+.cats{display:flex; flex-wrap:wrap; gap:6px;}
+.cchip{position:relative;}
+.cchip input{position:absolute; opacity:0; pointer-events:none;}
+.cchip span{
+  display:flex; align-items:center; gap:6px; padding:6px 12px; border-radius:99px;
+  border:1.5px solid var(--line); font-size:.9rem; font-weight:500; cursor:pointer;
+}
+.cchip span::before{content:""; width:10px; height:10px; border-radius:50%; background:var(--c);}
+.cchip input:checked + span{border-color:var(--c); background:color-mix(in srgb, var(--c) 16%, transparent); font-weight:600;}
+.cchip input:focus-visible + span{outline:3px solid var(--p-blue); outline-offset:2px;}
+.actions{display:grid; grid-template-columns:2fr 1fr; gap:8px;}
+.actions .full{grid-column:1 / -1;}
+.err{color:var(--danger); font-weight:600; margin:0; font-size:.92rem;}
+.wdrow{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+.wdrow button{
+  -webkit-appearance:none; appearance:none; border:1px solid var(--line); background:var(--bg);
+  border-radius:10px; min-height:44px; font-weight:700;
+}
+.sub{font-weight:600; font-size:.9rem; margin:0 0 -6px;}
+
+.drawer{
+  margin:0 0 0 auto; height:100%; height:100dvh; max-height:100dvh; width:min(84vw,330px);
+  border-radius:0; padding-top:env(safe-area-inset-top,0px);
+}
+.dr-in{padding:12px 14px calc(20px + env(safe-area-inset-bottom,0px)); display:grid; gap:14px;}
+.dr-head{display:flex; align-items:center; justify-content:space-between;}
+.dr-head strong{font-family:"Karantina","Arial Narrow",sans-serif; font-size:2.4rem; line-height:1;}
+.dr-nav{display:grid; gap:6px;}
+.dr-nav button{
+  -webkit-appearance:none; appearance:none; border:0; background:var(--bg); border-radius:14px;
+  padding:12px 14px; text-align:start; display:grid; gap:1px;
+}
+.dr-nav button span{font-weight:600;}
+.dr-nav button small{color:var(--muted); font-size:.82rem;}
+.seg{display:grid; grid-template-columns:repeat(3,1fr); background:var(--bg); border-radius:12px; padding:3px; margin-top:6px;}
+.seg button{-webkit-appearance:none; appearance:none; border:0; background:none; border-radius:9px; padding:8px 0; font-weight:600; font-size:.9rem;}
+.seg button[aria-pressed="true"]{background:var(--surface); box-shadow:var(--shadow);}
+.dr-soon{color:var(--muted); font-size:.85rem; margin:0;}
+
+/* toast */
+.toast{
+  position:fixed; z-index:50; left:50%; bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  transform:translate(-50%, 20px); opacity:0; transition:opacity .2s, transform .2s;
+  width:max-content; max-width:calc(100vw - 32px);
+  background:var(--ink); color:var(--bg); border-radius:14px; padding:10px 14px;
+  display:flex; align-items:center; gap:14px; font-size:.93rem; box-shadow:var(--shadow);
+}
+.toast.show{opacity:1; transform:translate(-50%, 0);}
+.toast button{-webkit-appearance:none; appearance:none; border:0; background:none; color:inherit; font-weight:700; text-decoration:underline; text-underline-offset:3px; padding:4px 2px;}
+@media (prefers-reduced-motion: reduce){ .toast,.month svg{transition:none;} }
+</style>
+</head>
+<body>
+<h1 class="sr">יומן</h1>
+
+<header class="top">
+  <div class="wrap">
+    <div class="topbar">
+      <button type="button" class="icon-btn" data-act="menu" aria-label="תפריט">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <button type="button" class="month" id="monthBtn" aria-expanded="false" aria-controls="monthGrid">
+        <span id="monthName">יומן</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="quick" id="quick">
+        <button type="button" data-jump="0" aria-pressed="false">היום</button>
+        <button type="button" data-jump="1" aria-pressed="false">מחר</button>
+      </div>
+    </div>
+    <div class="weekbar" id="weekbar">
+      <button type="button" class="arrow" data-act="prev-week" aria-label="השבוע הקודם">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+      </button>
+      <nav class="strip" id="strip" role="tablist" aria-label="ימי השבוע"></nav>
+      <button type="button" class="arrow" data-act="next-week" aria-label="השבוע הבא">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+      </button>
+    </div>
+    <div class="monthgrid" id="monthGrid" hidden></div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <section class="welcome" id="welcome" hidden></section>
+
+  <div id="dayView" hidden>
+    <section class="dayhead">
+      <div class="dayline">
+        <h2 class="dayname" id="dayName"></h2>
+        <span class="chip" id="relChip" hidden></span>
+      </div>
+      <p class="datefull" id="dateFull"></p>
+      <p class="daytype" id="dayType"></p>
+      <div class="changed" id="changedBar" hidden>
+        <span>ביום הזה יש שינויים מהלו״ז הקבוע</span>
+        <button type="button" class="link" data-act="reset-day">החזרה לקבוע</button>
+      </div>
+    </section>
+
+    <section class="now" id="now" aria-live="polite" hidden></section>
+
+    <ol class="timeline" id="timeline"></ol>
+
+    <div class="dayactions">
+      <button type="button" class="btn-add" data-act="add-day">+ הוספת פעילות ליום הזה</button>
+      <button type="button" class="more" data-act="day-opts" aria-label="אפשרויות נוספות ליום הזה">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+      </button>
+    </div>
+    <p class="hint">לחיצה על פעילות משנה אותה ליום הזה בלבד. את הלו״ז הקבוע משנים מהתפריט.</p>
+
+    <footer class="foot" id="foot"></footer>
+  </div>
+</main>
+
+<div class="page" id="page" hidden>
+  <div class="page-head">
+    <div class="wrap ph-in">
+      <button type="button" class="icon-btn" data-act="page-back" aria-label="חזרה">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+      <h2 id="pageTitle"></h2>
+    </div>
+  </div>
+  <div class="wrap page-body" id="pageBody"></div>
+</div>
+
+<!-- side menu -->
+<dialog class="drawer" id="drawer" aria-label="תפריט">
+  <div class="dr-in">
+    <div class="dr-head">
+      <strong>יומן</strong>
+      <button type="button" class="icon-btn" data-act="close-dlg" aria-label="סגירה">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <nav class="dr-nav">
+      <button type="button" data-page="fixed"><span>הלו״ז הקבוע</span><small>השבוע הרגיל שחוזר כל שבוע</small></button>
+      <button type="button" data-page="cats"><span>קטגוריות וצבעים</span><small>הצבע של כל סוג פעילות</small></button>
+      <button type="button" data-page="backup"><span>גיבוי ושחזור</span><small id="drBackup"></small></button>
+    </nav>
+    <div>
+      <div class="sub">מראה</div>
+      <div class="seg" id="themeSeg">
+        <button type="button" data-set-theme="auto">אוטומטי</button>
+        <button type="button" data-set-theme="light">בהיר</button>
+        <button type="button" data-set-theme="dark">כהה</button>
+      </div>
+    </div>
+    <p class="dr-soon">התראות יגיעו בהמשך.</p>
+  </div>
+</dialog>
+
+<!-- item editor -->
+<dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+  <form class="sheet-in" id="itemForm" novalidate>
+    <div class="grip" aria-hidden="true"></div>
+    <div>
+      <h3 id="sheetTitle" tabindex="-1" autofocus>עריכת פעילות</h3>
+      <p class="scope" id="sheetScope"></p>
+    </div>
+    <label class="fld">מה
+      <input class="in" id="fTitle" autocomplete="off" enterkeyhint="done">
+    </label>
+    <div class="times">
+      <label class="tf">
+        <span class="lbl">התחלה <button type="button" class="clr" data-clear="fStart">בלי שעה</button></span>
+        <input class="in" type="time" id="fStart">
+      </label>
+      <label class="tf" id="endWrap">
+        <span class="lbl">סיום <button type="button" class="clr" data-clear="fEnd">בלי סיום</button></span>
+        <input class="in" type="time" id="fEnd">
+      </label>
+    </div>
+    <label class="fld" id="whenWrap">מתי, במילים
+      <input class="in" id="fWhen" placeholder="למשל: עד צאת שבת" autocomplete="off">
+    </label>
+    <label class="fld">הערה
+      <input class="in" id="fNote" autocomplete="off" placeholder="לא חובה">
+    </label>
+    <div>
+      <div class="sub" style="margin-bottom:8px">קטגוריה</div>
+      <div class="cats" id="catPick" role="radiogroup" aria-label="קטגוריה"></div>
+    </div>
+    <p class="err" id="fErr" hidden></p>
+    <div class="actions">
+      <button type="submit" class="btn primary">שמירה</button>
+      <button type="button" class="btn" data-act="close-dlg">ביטול</button>
+      <button type="button" class="btn danger full" id="fDel" data-act="delete-item">מחיקה</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- day options -->
+<dialog class="sheet" id="dayOpts" aria-labelledby="doTitle">
+  <div class="sheet-in">
+    <div class="grip" aria-hidden="true"></div>
+    <div>
+      <h3 id="doTitle" tabindex="-1" autofocus></h3>
+      <p class="scope">כל מה שכאן משנה רק את היום הזה.</p>
+    </div>
+    <label class="fld">תיאור היום
+      <input class="in" id="doSub" autocomplete="off" placeholder="למשל: יום חופש">
+    </label>
+    <button type="button" class="btn" id="doReset" data-act="reset-day">החזרה ללו״ז הקבוע</button>
+    <div>
+      <div class="sub" style="margin-bottom:12px">להחליף את כל היום בלו״ז של יום:</div>
+      <div class="wdrow" id="doWd"></div>
+    </div>
+    <button type="button" class="btn" data-act="clear-day">ניקוי היום (יום בלי לו״ז)</button>
+    <button type="button" class="btn ghost" data-act="close-dlg">סגירה</button>
+  </div>
+</dialog>
+
+<!-- paste backup -->
+<dialog class="sheet" id="pasteDlg" aria-labelledby="pasteTitle">
+  <div class="sheet-in">
+    <div class="grip" aria-hidden="true"></div>
+    <h3 id="pasteTitle" tabindex="-1" autofocus>הדבקת גיבוי</h3>
+    <p class="scope">מדביקים כאן את כל הטקסט של קובץ הגיבוי.</p>
+    <textarea class="in" id="pasteText" rows="8" dir="ltr" spellcheck="false" autocomplete="off"></textarea>
+    <p class="err" id="pasteErr" hidden></p>
+    <div class="actions">
+      <button type="button" class="btn primary" data-act="paste-load">טעינה</button>
+      <button type="button" class="btn" data-act="close-dlg">ביטול</button>
+    </div>
+  </div>
+</dialog>
+
+<input type="file" id="fileIn" accept=".json,application/json,text/plain" hidden>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+'use strict';
+(() => {
+/* ------------------------------------------------------------------
+   יומן — the app holds no schedule of its own.
+   Everything lives in localStorage and moves in and out as a backup file.
+------------------------------------------------------------------- */
+const STORE_KEY = 'yoman.data.v1';
+const PREFS_KEY = 'yoman.prefs.v1';
+const DAY_START = 4 * 60;            // times before 04:00 belong to the night before
+const PALETTE = ['amber','orange','red','pink','violet','blue','cyan','teal','green','brown','slate','gray'];
+const PALETTE_HE = {amber:'ענבר', orange:'כתום', red:'אדום', pink:'ורוד', violet:'סגול', blue:'כחול', cyan:'תכלת', teal:'טורקיז', green:'ירוק', brown:'חום', slate:'כחול כהה', gray:'אפור'};
+const WD = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const WDL = ['א׳','ב׳','ג׳','ד׳','ה׳','ו׳','ש׳'];
+const DEFAULT_CATS = [
+  {id:'general', name:'כללי', color:'gray', minor:true},
+  {id:'transit', name:'נסיעה', color:'gray', minor:true, dashed:true},
+  {id:'work', name:'עבודה', color:'amber'},
+  {id:'study', name:'לימודים', color:'blue', track:true},
+  {id:'sport', name:'ספורט', color:'red'},
+  {id:'family', name:'משפחה', color:'teal'},
+  {id:'sleep', name:'שינה', color:'slate'}
+];
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clone = o => JSON.parse(JSON.stringify(o));
+const str = v => typeof v === 'string' ? v.trim() : '';
+
+/* ---------- storage ---------- */
+function readJSON(k){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch { return null; } }
+function writeJSON(k, v){
+  try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, JSON.stringify(v)); return true; }
+  catch { return false; }
+}
+
+/* ---------- dates ---------- */
+const pad = n => String(n).padStart(2, '0');
+const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const dateOf = k => { const [y, m, d] = k.split('-').map(Number); return new Date(y, m - 1, d); };
+const addDays = (k, n) => { const d = dateOf(k); d.setDate(d.getDate() + n); return keyOf(d); };
+const wdOf = k => dateOf(k).getDay();
+const weekStart = k => addDays(k, -wdOf(k));
+const todayKey = () => keyOf(new Date());
+const shortDate = k => { const d = dateOf(k); return `${d.getDate()}.${d.getMonth() + 1}`; };
+const fmtMonth = new Intl.DateTimeFormat('he-IL', {month:'long', year:'numeric'});
+const fmtMonthOnly = new Intl.DateTimeFormat('he-IL', {month:'long'});
+const fmtLong = new Intl.DateTimeFormat('he-IL', {day:'numeric', month:'long'});
+const fmtStamp = new Intl.DateTimeFormat('he-IL', {day:'numeric', month:'numeric', year:'numeric', hour:'numeric', minute:'2-digit'});
+const fmtHeb = (() => { try { return new Intl.DateTimeFormat('he-IL-u-ca-hebrew', {day:'numeric', month:'long'}); } catch { return null; } })();
+
+function relLabel(k){
+  const t = todayKey();
+  if (k === t) return 'היום';
+  if (k === addDays(t, 1)) return 'מחר';
+  if (k === addDays(t, -1)) return 'אתמול';
+  return '';
+}
+/* "היום" / "מחר" / "יום שלישי 14.10" — reads right after ל־ or מ־ */
+const dayLabel = k => relLabel(k) || `יום ${WD[wdOf(k)]} ${shortDate(k)}`;
+
+/* ---------- times ---------- */
+const isTime = v => typeof v === 'string' && /^([01]?\d|2[0-3]):[0-5]\d$/.test(v.trim());
+const normTime = v => { const [h, m] = v.trim().split(':'); return h.padStart(2, '0') + ':' + m; };
+const toMin = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+const keyMin = m => m < DAY_START ? m + 1440 : m;
+const showTime = s => String(Number(s.slice(0, 2))) + s.slice(2);
+const showMin = m => { m = ((m % 1440) + 1440) % 1440; return Math.floor(m / 60) + ':' + pad(m % 60); };
+const minToTime = m => { m = ((m % 1440) + 1440) % 1440; return pad(Math.floor(m / 60)) + ':' + pad(m % 60); };
+const spanMin = it => (toMin(it.end) - toMin(it.start) + 1440) % 1440;
+
+function dur(m){
+  const h = Math.floor(m / 60), r = m % 60;
+  if (h === 0) return `${r} דק׳`;
+  if (r === 30) return h === 1 ? 'שעה וחצי' : `${h}.5 שעות`;
+  const hs = h === 1 ? 'שעה' : h === 2 ? 'שעתיים' : `${h} שעות`;
+  return r ? `${hs} ו-${r} דק׳` : hs;
+}
+function left(m){
+  const h = Math.floor(m / 60), r = m % 60;
+  if (h === 0) return r <= 1 ? 'עוד דקה' : `עוד ${r} דקות`;
+  const hs = h === 1 ? 'שעה' : h === 2 ? 'שעתיים' : `${h} שעות`;
+  return r ? `עוד ${hs} ו-${r} דקות` : `עוד ${hs}`;
+}
+const hrs = m => String(Math.round(m / 6) / 10);
+const hrsText = m => { const h = hrs(m); return h === '1' ? 'שעה' : h === '2' ? 'שעתיים' : `${h} שעות`; };
+
+/* ---------- data ---------- */
+/* Untimed items (e.g. "עד צאת שבת") keep their place after the timed item before them. */
+function sortItems(items){
+  let anchor = -1;
+  return items
+    .map((it, i) => {
+      if (it.start) anchor = keyMin(toMin(it.start));
+      return {it, i, k: it.start ? anchor : anchor + 0.5};
+    })
+    .sort((a, b) => a.k - b.k || a.i - b.i)
+    .map(x => x.it);
+}
+
+function normItems(arr){
+  if (!Array.isArray(arr)) return [];
+  return sortItems(arr.filter(x => x && typeof x === 'object' && str(x.title)).map(x => {
+    const it = {};
+    if (isTime(x.start)) it.start = normTime(x.start);
+    if (it.start && isTime(x.end) && normTime(x.end) !== it.start) it.end = normTime(x.end);
+    if (!it.start && str(x.when)) it.when = str(x.when);
+    it.title = str(x.title);
+    if (str(x.note)) it.note = str(x.note);
+    it.cat = str(x.cat);
+    return it;
+  }));
+}
+
+function normalize(raw){
+  if (!raw || typeof raw !== 'object' || !Array.isArray(raw.week) || raw.week.length !== 7) throw new Error('format');
+  let categories = Array.isArray(raw.categories) ? raw.categories.filter(c => c && str(c.id)).map(c => {
+    const o = {id: str(c.id), name: str(c.name) || str(c.id), color: PALETTE.includes(c.color) ? c.color : 'gray'};
+    if (c.minor) o.minor = true;
+    if (c.dashed) o.dashed = true;
+    if (c.track) o.track = true;
+    return o;
+  }) : [];
+  if (!categories.length) categories = clone(DEFAULT_CATS);
+  const week = raw.week.map(d => ({subtitle: str(d && d.subtitle), accent: str(d && d.accent), items: normItems(d && d.items)}));
+  const days = {};
+  if (raw.days && typeof raw.days === 'object' && !Array.isArray(raw.days)){
+    for (const [k, v] of Object.entries(raw.days)){
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(k) || !v || typeof v !== 'object') continue;
+      const o = {items: normItems(v.items)};
+      if (typeof v.subtitle === 'string') o.subtitle = v.subtitle.trim();
+      if (typeof v.accent === 'string') o.accent = v.accent.trim();
+      days[k] = o;
+    }
+  }
+  return {categories, week, days, notes: typeof raw.notes === 'string' ? raw.notes.trim() : ''};
+}
+
+function blankData(){
+  return {categories: clone(DEFAULT_CATS), week: WD.map(() => ({subtitle:'', accent:'', items:[]})), days:{}, notes:''};
+}
+
+let data = null, corrupt = false;
+{
+  const raw = readJSON(STORE_KEY);
+  if (raw){ try { data = normalize(raw); } catch { corrupt = true; } }
+}
+const prefs = Object.assign({theme:'auto', lastBackupAt:0, lastChangeAt:0}, readJSON(PREFS_KEY) || {});
+const savePrefs = () => writeJSON(PREFS_KEY, prefs);
+
+function save(){
+  const ok = writeJSON(STORE_KEY, data);
+  prefs.lastChangeAt = Date.now();
+  savePrefs();
+  return ok;
+}
+function askPersist(){ try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch {} }
+
+const catOf = id => data && data.categories.find(c => c.id === id);
+const colorVar = id => `var(--p-${(catOf(id) || {}).color || 'gray'})`;
+const defaultCat = () => (data.categories.find(c => c.id === 'general') || data.categories[0] || {id:''}).id;
+
+function dayPlan(k){
+  const f = data.week[wdOf(k)], o = data.days[k];
+  if (!o) return {items: f.items, subtitle: f.subtitle, accent: f.accent, changed: false};
+  return {
+    items: o.items,
+    subtitle: o.subtitle !== undefined ? o.subtitle : f.subtitle,
+    accent: o.accent !== undefined ? o.accent : f.accent,
+    changed: true
+  };
+}
+const sig = it => JSON.stringify([it.start || '', it.end || '', it.when || '', it.title, it.note || '', it.cat]);
+const sameItems = (a, b) => a.length === b.length && a.every((x, i) => sig(x) === sig(b[i]));
+
+function ensureOverride(k){
+  if (!data.days[k]) data.days[k] = {items: clone(data.week[wdOf(k)].items)};
+  return data.days[k];
+}
+/* An override that ended up identical to the fixed week is dropped. */
+function tidyOverride(k){
+  const o = data.days[k];
+  if (!o) return;
+  const f = data.week[wdOf(k)];
+  if (o.subtitle === f.subtitle) delete o.subtitle;
+  if (o.accent === f.accent) delete o.accent;
+  if (o.subtitle === undefined && o.accent === undefined && sameItems(o.items, f.items)) delete data.days[k];
+}
+
+/* Every change goes through here: save, redraw, offer undo. */
+function mutate(fn, msg, opts = {}){
+  const before = JSON.stringify(data);
+  fn();
+  const ok = save();
+  renderMain();
+  if (opts.page !== false) renderPage();
+  if (!ok) toast('השמירה במכשיר נכשלה. כדאי לשמור קובץ גיבוי עכשיו.');
+  else if (msg) toast(msg, () => {
+    data = JSON.parse(before);
+    save(); renderMain(); renderPage();
+    toast('השינוי בוטל');
+  });
+}
+
+/* ---------- what's happening now ---------- */
+/* Lays out yesterday, today and tomorrow on one minute axis (0 = today 00:00).
+   An item without an end runs until the next thing that has a start. */
+function resolve(baseKey){
+  const list = [];
+  for (let o = -1; o <= 1; o++){
+    const k = addDays(baseKey, o), off = o * 1440;
+    let seenTimed = false, prev = null, run = null;
+    dayPlan(k).items.forEach((it, idx) => {
+      const en = {it, idx, k, s: null, e: null, run: null, hardEnd: false};
+      if (it.start){
+        en.s = off + keyMin(toMin(it.start));
+        if (it.end){ en.e = en.s + spanMin(it); en.hardEnd = true; }
+        seenTimed = true; run = null;
+      } else {
+        if (!run){
+          run = {s: null, e: null, head: en, soft: false};
+          if (!seenTimed){ run.s = off + DAY_START; run.soft = true; }
+          else if (prev.hardEnd) run.s = prev.e;
+        }
+        en.run = run;
+      }
+      list.push(en); prev = en;
+    });
+  }
+  const startOf = en => en.run ? (en.run.head === en ? en.run.s : null) : en.s;
+  list.forEach((en, i) => {
+    const head = en.run && en.run.head === en;
+    if (!head && (en.run || en.hardEnd)) return;
+    const own = startOf(en);
+    for (let j = i + 1; j < list.length; j++){
+      const c = list[j];
+      if (en.run && c.run === en.run) continue;
+      const cs = startOf(c);
+      if (cs != null && (own == null || cs > own)){
+        if (head) en.run.e = cs;
+        else { en.e = cs; en.softEnd = !!(c.run && c.run.soft); }
+        break;
+      }
+    }
+  });
+  list.forEach(en => { en.S = startOf(en); en.E = en.run ? en.run.e : en.e; });
+  return list;
+}
+
+function nowInfo(tk, m){
+  const list = resolve(tk);
+  let ci = -1;
+  list.forEach((en, i) => { if (en.S != null && en.S <= m && (en.E == null || m < en.E)) ci = i; });
+  if (ci >= 0) return {list, cur: list[ci], next: list[ci + 1] || null};
+  const ni = list.findIndex(en => en.S != null && en.S > m);
+  return {list, cur: null, next: ni >= 0 ? list[ni] : null, gapEnd: ni >= 0 ? list[ni].S : null};
+}
+
+/* ---------- ui state ---------- */
+const state = {sel: todayKey(), follow: true, monthOpen: false, monthCursor: null, page: null, fixedWd: new Date().getDay()};
+let edit = null;
+
+/* ---------- render: main ---------- */
+function renderMain(){
+  applyTheme();
+  const empty = !data;
+  $('#welcome').hidden = !empty;
+  $('#dayView').hidden = empty;
+  $('#weekbar').hidden = empty;
+  $('#quick').hidden = empty;
+  $('#monthBtn').disabled = empty;
+  if (empty){
+    state.monthOpen = false;
+    $('#monthGrid').hidden = true;
+    $('#monthName').textContent = 'יומן';
+    renderWelcome();
+    return;
+  }
+  const tk = todayKey();
+  if (state.follow) state.sel = tk;
+  renderHeader(tk);
+  renderMonthGrid(tk);
+  renderDay(tk);
+  renderFoot(tk);
+}
+
+function renderWelcome(){
+  $('#welcome').innerHTML = `
+    <h2>יומן</h2>
+    <p>הלו״ז שלך נשמר רק במכשיר הזה, לא בתוך האפליקציה. כדי להתחיל, טוענים את קובץ הגיבוי.</p>
+    ${corrupt ? '<p class="err">המידע שנשמר במכשיר לא תקין. אפשר לטעון גיבוי כדי לשחזר אותו.</p>' : ''}
+    <button type="button" class="btn primary" data-act="import-file">טעינת קובץ גיבוי</button>
+    <button type="button" class="btn" data-act="import-paste">הדבקת גיבוי כטקסט</button>
+    <button type="button" class="btn ghost" data-act="start-blank">התחלה עם לו״ז ריק</button>
+    ${standalone() ? '' : '<p class="muted" style="font-size:.88rem;margin-top:8px">באייפון: כדאי להוסיף את היומן למסך הבית (שיתוף ← הוספה למסך הבית), כך המידע נשמר לאורך זמן.</p>'}`;
+}
+
+function renderHeader(tk){
+  const sel = state.sel;
+  $('#monthName').textContent = fmtMonth.format(dateOf(sel));
+  $('#monthBtn').setAttribute('aria-expanded', String(state.monthOpen));
+  $$('#quick [data-jump]').forEach(b => b.setAttribute('aria-pressed', String(sel === addDays(tk, +b.dataset.jump))));
+  const ws = weekStart(sel);
+  let h = '';
+  for (let i = 0; i < 7; i++){
+    const k = addDays(ws, i), p = dayPlan(k), d = dateOf(k);
+    h += `<button type="button" class="tab${k === tk ? ' is-today' : ''}" role="tab" aria-selected="${k === sel}" data-k="${k}"
+      style="--c:${p.accent ? colorVar(p.accent) : 'transparent'}" aria-label="${WD[i]} ${d.getDate()} ב${fmtMonthOnly.format(d)}${p.changed ? ', יש שינויים' : ''}">
+      <span class="wl">${WDL[i]}</span><span class="dn">${d.getDate()}</span><span class="dot" aria-hidden="true"></span>
+      ${p.changed ? '<span class="mk" aria-hidden="true"></span>' : ''}</button>`;
+  }
+  $('#strip').innerHTML = h;
+}
+
+function renderMonthGrid(tk){
+  const g = $('#monthGrid');
+  g.hidden = !state.monthOpen;
+  if (!state.monthOpen) return;
+  const c = dateOf(state.monthCursor), y = c.getFullYear(), mo = c.getMonth();
+  const lead = new Date(y, mo, 1).getDay(), n = new Date(y, mo + 1, 0).getDate();
+  let cells = WDL.map(l => `<div class="mg-wl">${l}</div>`).join('');
+  for (let i = 0; i < lead; i++) cells += '<div></div>';
+  for (let d = 1; d <= n; d++){
+    const k = keyOf(new Date(y, mo, d)), p = dayPlan(k);
+    cells += `<button type="button" class="mg-cell${k === tk ? ' is-today' : ''}${k === state.sel ? ' is-sel' : ''}" data-k="${k}"
+      style="--c:${p.accent ? colorVar(p.accent) : 'transparent'}" aria-label="${d} ב${fmtMonthOnly.format(dateOf(k))}${p.changed ? ', יש שינויים' : ''}">
+      <span>${d}</span><span class="dot" aria-hidden="true"></span>${p.changed ? '<span class="mk" aria-hidden="true"></span>' : ''}</button>`;
+  }
+  g.innerHTML = `
+    <div class="mg-head">
+      <button type="button" class="arrow" data-act="prev-month" aria-label="החודש הקודם"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
+      <strong>${fmtMonth.format(c)}</strong>
+      <button type="button" class="arrow" data-act="next-month" aria-label="החודש הבא"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg></button>
+    </div>
+    <div class="mg-grid">${cells}</div>`;
+}
+
+function rowHTML(it, i, flags = {}){
+  const cat = catOf(it.cat) || {};
+  const cls = ['row'];
+  if (cat.minor) cls.push('minor');
+  if (cat.dashed) cls.push('transit');
+  if (flags.current) cls.push('current');
+  else if (flags.past) cls.push('past');
+  const time = it.start
+    ? `<span class="t1">${showTime(it.start)}</span>${it.end ? `<span class="t2">${showTime(it.end)}</span>` : ''}`
+    : `<span class="tl">${esc(it.when || '')}</span>`;
+  const d = it.start && it.end ? dur(spanMin(it)) : '';
+  return `<li class="${cls.join(' ')}" style="--c:${colorVar(it.cat)}">
+    <div class="time">${time}</div>
+    <div class="wire" aria-hidden="true"><span class="node"></span></div>
+    <button type="button" class="body" data-i="${i}">
+      <span class="title">${esc(it.title)}${flags.changed ? '<span class="tag">שינוי</span>' : ''}</span>
+      ${it.note ? `<span class="note">${esc(it.note)}</span>` : ''}
+      ${d ? `<span class="dur">${d}</span>` : ''}
+    </button></li>`;
+}
+
+function renderDay(tk){
+  const sel = state.sel, plan = dayPlan(sel), w = wdOf(sel), d = dateOf(sel);
+  $('#dayName').textContent = `יום ${WD[w]}`;
+  const rel = relLabel(sel);
+  $('#relChip').hidden = !rel;
+  $('#relChip').textContent = rel;
+  $('#dateFull').textContent = fmtLong.format(d) + (fmtHeb ? ' · ' + fmtHeb.format(d) : '');
+  $('#dayType').textContent = plan.subtitle || '';
+  $('#dayType').hidden = !plan.subtitle;
+  $('#changedBar').hidden = !plan.changed;
+
+  const now = new Date(), m = now.getHours() * 60 + now.getMinutes();
+  const info = sel === tk ? nowInfo(tk, m) : null;
+  renderNow(info, m);
+
+  const fixedSigs = plan.changed ? new Set(data.week[w].items.map(sig)) : null;
+  const byIdx = info ? new Map(info.list.filter(en => en.k === sel).map(en => [en.idx, en])) : null;
+  $('#timeline').innerHTML = plan.items.length
+    ? plan.items.map((it, i) => {
+        const en = byIdx && byIdx.get(i);
+        return rowHTML(it, i, {
+          changed: fixedSigs && !fixedSigs.has(sig(it)),
+          current: !!(info && info.cur && info.cur.k === sel && info.cur.idx === i),
+          past: !!(en && en.E != null && en.E <= m)
+        });
+      }).join('')
+    : '<li class="empty">אין פעילויות ביום הזה</li>';
+}
+
+function renderNow(info, m){
+  const box = $('#now');
+  if (!info || !info.list.length){ box.hidden = true; return; }
+  box.hidden = false;
+  const {cur, next} = info;
+  let c, title, note = '', bar = null, line = '';
+  if (cur){
+    c = colorVar(cur.it.cat); title = cur.it.title; note = cur.it.note || '';
+    if (cur.run) line = cur.it.when || '';
+    else if (cur.E != null && !cur.softEnd){ bar = (m - cur.S) / (cur.E - cur.S); line = `עד ${showMin(cur.E)}, ${left(cur.E - m)}`; }
+    else line = `מ-${showTime(cur.it.start)}`;
+  } else {
+    c = 'var(--p-gray)'; title = 'זמן פנוי';
+    if (info.gapEnd != null) line = `עד ${showMin(info.gapEnd)}, ${left(info.gapEnd - m)}`;
+  }
+  box.style.setProperty('--c', c);
+  let h = `<div class="now-label">עכשיו</div><div class="now-title">${esc(title)}</div>`;
+  if (note) h += `<div class="now-note">${esc(note)}</div>`;
+  if (bar != null) h += `<div class="bar" aria-hidden="true"><span style="width:${(Math.min(1, Math.max(0, bar)) * 100).toFixed(1)}%"></span></div>`;
+  if (line) h += `<div class="now-time">${esc(line)}</div>`;
+  if (next){
+    const when = next.it.start ? ` ב-${showTime(next.it.start)}` : next.it.when ? ` (${esc(next.it.when)})` : '';
+    h += `<div class="now-next">אחר כך${when}: ${esc(next.it.title)}</div>`;
+  }
+  box.innerHTML = h;
+}
+
+/* Weekly hours for categories marked "סיכום שעות". */
+function totals(itemsOf){
+  return data.categories.filter(c => c.track).map(c => {
+    const per = [0, 1, 2, 3, 4, 5, 6].map(i =>
+      itemsOf(i).filter(it => it.cat === c.id && it.start && it.end).reduce((s, it) => s + spanMin(it), 0));
+    return {c, per, total: per.reduce((a, b) => a + b, 0)};
+  });
+}
+const totalsHTML = (rows, label) => rows.map(r =>
+  `<p><strong>${esc(r.c.name)} ${label}: ${hrsText(r.total)}</strong></p>` +
+  (r.total ? `<p>${r.per.map((m, i) => m ? `${WDL[i]} ${hrs(m)}` : '').filter(Boolean).join(' · ')}</p>` : '')
+).join('');
+
+function needsBackup(){
+  return prefs.lastChangeAt > prefs.lastBackupAt && Date.now() - prefs.lastBackupAt > 3 * 864e5;
+}
+
+function renderFoot(tk){
+  const ws = weekStart(state.sel), we = addDays(ws, 6);
+  const label = ws === weekStart(tk) ? 'השבוע' : `בשבוע ${shortDate(ws)}–${shortDate(we)}`;
+  let h = totalsHTML(totals(i => dayPlan(addDays(ws, i)).items), label);
+  if (data.notes) h += `<p>${esc(data.notes).replace(/\n/g, '<br>')}</p>`;
+  if (needsBackup()) h += `<div class="remind"><span>יש שינויים שעוד לא גיבית</span><button type="button" class="link" data-act="export">שמירת גיבוי</button></div>`;
+  $('#foot').innerHTML = h;
+  $('#foot').hidden = !h;
+}
+
+/* ---------- render: pages (fixed week, categories, backup) ---------- */
+const PAGES = {fixed:'הלו״ז הקבוע', cats:'קטגוריות וצבעים', backup:'גיבוי ושחזור'};
+
+function renderPage(){
+  const pg = $('#page');
+  const show = !!state.page && (!!data || state.page === 'backup');
+  pg.hidden = !show;
+  document.documentElement.classList.toggle('page-open', show);
+  if (!show) return;
+  $('#pageTitle').textContent = PAGES[state.page];
+  const body = $('#pageBody');
+  if (state.page === 'fixed') renderFixed(body);
+  else if (state.page === 'cats') renderCats(body);
+  else renderBackup(body);
+}
+
+function renderFixed(body){
+  const w = state.fixedWd, day = data.week[w];
+  const tabs = WD.map((n, i) => {
+    const a = data.week[i].accent;
+    return `<button type="button" class="tab" role="tab" aria-selected="${i === w}" data-wd="${i}" aria-label="${n}" style="--c:${a ? colorVar(a) : 'transparent'}">
+      <span class="dn">${WDL[i]}</span><span class="dot" aria-hidden="true"></span></button>`;
+  }).join('');
+  const accentOpts = `<option value="">בלי צבע</option>` + data.categories.map(c =>
+    `<option value="${esc(c.id)}"${c.id === day.accent ? ' selected' : ''}>${esc(c.name)}</option>`).join('');
+  const copyOpts = WD.map((n, i) => i === w ? '' : `<option value="${i}">${n}</option>`).join('');
+  body.innerHTML = `
+    <p class="lead">זה השבוע הרגיל שחוזר כל שבוע. שינוי כאן חל על כל השבועות, חוץ מימים שכבר שינית בנפרד. לשינוי של יום אחד, חוזרים ליומן ולוחצים על הפעילות.</p>
+    <nav class="fixed-tabs" role="tablist" aria-label="ימי השבוע">${tabs}</nav>
+    <h2 class="pg-day">יום ${WD[w]}</h2>
+    <div class="card">
+      <label class="fld">תיאור היום
+        <input class="in" data-fx="subtitle" value="${esc(day.subtitle)}" placeholder="למשל: יום עבודה ארוך" autocomplete="off">
+      </label>
+      <label class="fld">צבע היום בפס התאריכים
+        <select class="in" data-fx="accent">${accentOpts}</select>
+      </label>
+    </div>
+    <ol class="timeline" id="fxList">${day.items.length ? day.items.map((it, i) => rowHTML(it, i)).join('') : '<li class="empty">אין עדיין פעילויות ביום הזה</li>'}</ol>
+    <button type="button" class="btn-add" data-act="add-fixed">+ הוספת פעילות ליום ${WD[w]}</button>
+    <div class="card" style="margin-top:14px">
+      <div class="fld">העתקת כל הלו״ז של יום אחר ליום ${WD[w]}
+        <div class="row-inline">
+          <select class="in" id="fxCopyFrom" aria-label="מאיזה יום להעתיק">${copyOpts}</select>
+          <button type="button" class="btn" data-act="copy-fixed">העתקה</button>
+        </div>
+      </div>
+    </div>
+    <div class="summary">${totalsHTML(totals(i => data.week[i].items), 'בשבוע רגיל') || '<p>אפשר לסמן קטגוריה ל״סיכום שעות״ במסך הקטגוריות, והסיכום השבועי יופיע כאן.</p>'}</div>
+    <div class="card" style="margin-top:14px">
+      <label class="fld">הערות כלליות (מופיעות בתחתית היומן)
+        <textarea class="in" data-fx="notes" rows="3">${esc(data.notes)}</textarea>
+      </label>
+    </div>`;
+}
+
+function renderCats(body){
+  const used = {};
+  const count = items => items.forEach(it => { used[it.cat] = (used[it.cat] || 0) + 1; });
+  data.week.forEach(d => count(d.items));
+  Object.values(data.days).forEach(d => count(d.items));
+  body.innerHTML = `<p class="lead">כל פעילות שייכת לקטגוריה, והקטגוריה קובעת את הצבע שלה.</p>` +
+    data.categories.map((c, ci) => `
+      <div class="card" style="--c:var(--p-${c.color})" data-ci="${ci}">
+        <div class="cat-top">
+          <span class="sw" aria-hidden="true"></span>
+          <input class="in" data-cf="name" value="${esc(c.name)}" aria-label="שם הקטגוריה" autocomplete="off">
+          <button type="button" class="mini danger" data-act="cat-del">מחיקה</button>
+        </div>
+        <div class="swatches" role="radiogroup" aria-label="צבע">
+          ${PALETTE.map(p => `<button type="button" class="swb${p === c.color ? ' on' : ''}" style="--s:var(--p-${p})" data-act="cat-color" data-color="${p}" role="radio" aria-checked="${p === c.color}" aria-label="${PALETTE_HE[p]}"></button>`).join('')}
+        </div>
+        <div class="flags">
+          <label class="chk"><input type="checkbox" data-cf="minor"${c.minor ? ' checked' : ''}> טקסט חלש (פעילות משנית)</label>
+          <label class="chk"><input type="checkbox" data-cf="dashed"${c.dashed ? ' checked' : ''}> קו מקווקו (נסיעות)</label>
+          <label class="chk"><input type="checkbox" data-cf="track"${c.track ? ' checked' : ''}> סיכום שעות שבועי</label>
+        </div>
+        <p class="muted" style="font-size:.85rem">${used[c.id] ? `בשימוש ב-${used[c.id]} פעילויות` : 'לא בשימוש'}</p>
+      </div>`).join('') +
+    `<button type="button" class="btn-add" data-act="cat-add">+ קטגוריה חדשה</button>`;
+}
+
+function renderBackup(body){
+  const last = prefs.lastBackupAt ? `גיבוי אחרון מהמכשיר הזה: ${fmtStamp.format(new Date(prefs.lastBackupAt))}` : 'עוד לא נשמר גיבוי מהמכשיר הזה.';
+  body.innerHTML = `
+    <p class="lead">כל הלו״ז שלך שמור רק בדפדפן במכשיר הזה. קובץ גיבוי מאפשר לשחזר אותו אם יימחק, או להעביר אותו למכשיר אחר.</p>
+    ${data ? `<div class="card">
+      <h3>שמירת גיבוי</h3>
+      <p class="muted">${last}</p>
+      <button type="button" class="btn primary" data-act="export">שמירת קובץ גיבוי</button>
+      <button type="button" class="btn" data-act="copy">העתקת הגיבוי כטקסט</button>
+    </div>` : ''}
+    <div class="card">
+      <h3>טעינת גיבוי</h3>
+      <p class="muted">טעינה מחליפה את כל הלו״ז שכרגע במכשיר במה שבקובץ.</p>
+      <button type="button" class="btn" data-act="import-file">טעינת קובץ גיבוי</button>
+      <button type="button" class="btn" data-act="import-paste">הדבקת גיבוי כטקסט</button>
+    </div>
+    ${standalone() ? '' : `<div class="card">
+      <h3>באייפון</h3>
+      <p class="muted">כדי שהמידע יישמר לאורך זמן, מוסיפים את היומן למסך הבית: בספארי לוחצים על שיתוף ואז ״הוספה למסך הבית״.</p>
+    </div>`}
+    ${data ? `<div class="card">
+      <h3>מחיקת הכל</h3>
+      <p class="muted">מוחק את כל הלו״ז מהמכשיר. כדאי לשמור גיבוי לפני.</p>
+      <button type="button" class="btn danger" data-act="wipe">מחיקת כל הנתונים</button>
+    </div>` : ''}`;
+}
+
+function openPage(p){
+  state.page = p;
+  if (p === 'fixed') state.fixedWd = wdOf(state.sel);
+  try { history.pushState({page: p}, ''); } catch {}
+  renderPage();
+  $('#page').scrollTop = 0;
+}
+function closePage(){
+  if (history.state && history.state.page) history.back();
+  else { state.page = null; renderPage(); }
+}
+window.addEventListener('popstate', () => {
+  state.page = (history.state && history.state.page) || null;
+  renderPage();
+});
+
+/* ---------- item editor ---------- */
+function itemsFor(ctx){ return ctx.mode === 'day' ? dayPlan(ctx.key).items : data.week[ctx.wd].items; }
+
+function openEditor(ctx){
+  const items = itemsFor(ctx);
+  let it = items[ctx.idx];
+  if (!it) ctx.idx = -1;
+  edit = ctx;
+  if (!it){
+    let start = '';
+    if (ctx.mode === 'day' && ctx.key === todayKey()){
+      const n = new Date();
+      start = minToTime(Math.ceil((n.getHours() * 60 + n.getMinutes()) / 15) * 15);
+    } else {
+      const last = [...items].reverse().find(x => x.start);
+      start = last ? (last.end || '') : '';
+    }
+    it = {start, title: '', cat: defaultCat()};
+  }
+  $('#sheetTitle').textContent = ctx.idx >= 0 ? 'עריכת פעילות' : 'פעילות חדשה';
+  const scope = $('#sheetScope');
+  if (ctx.mode === 'day'){
+    scope.textContent = `רק ל${dayLabel(ctx.key)}. הלו״ז הקבוע לא משתנה.`;
+    scope.className = 'scope';
+  } else {
+    scope.textContent = `בלו״ז הקבוע: כל יום ${WD[ctx.wd]}, בכל שבוע.`;
+    scope.className = 'scope fixed';
+  }
+  $('#fTitle').value = it.title || '';
+  $('#fStart').value = it.start || '';
+  $('#fEnd').value = it.end || '';
+  $('#fWhen').value = it.when || '';
+  $('#fNote').value = it.note || '';
+  const cur = catOf(it.cat) ? it.cat : defaultCat();
+  $('#catPick').innerHTML = data.categories.map(c => `
+    <label class="cchip" style="--c:var(--p-${c.color})">
+      <input type="radio" name="cat" value="${esc(c.id)}"${c.id === cur ? ' checked' : ''}><span>${esc(c.name)}</span>
+    </label>`).join('');
+  $('#fDel').hidden = ctx.idx < 0;
+  $('#fDel').textContent = ctx.mode === 'day' ? `מחיקה מ${dayLabel(ctx.key)}` : `מחיקה מהלו״ז הקבוע`;
+  $('#fErr').hidden = true;
+  syncTimeFields();
+  $('#sheet').showModal();
+}
+
+function syncTimeFields(){
+  const has = !!$('#fStart').value;
+  $('#endWrap').style.visibility = has ? '' : 'hidden';
+  $('#whenWrap').hidden = has;
+}
+
+function formError(msg){ const e = $('#fErr'); e.textContent = msg; e.hidden = false; }
+
+function applyToItems(ctx, fn, msg){
+  mutate(() => {
+    if (ctx.mode === 'day'){
+      const o = ensureOverride(ctx.key);
+      o.items = sortItems(fn(o.items.slice()));
+      tidyOverride(ctx.key);
+    } else {
+      const d = data.week[ctx.wd];
+      d.items = sortItems(fn(d.items.slice()));
+    }
+  }, msg);
+}
+
+$('#itemForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const title = $('#fTitle').value.trim();
+  const start = $('#fStart').value, end = $('#fEnd').value;
+  const when = $('#fWhen').value.trim(), note = $('#fNote').value.trim();
+  const cat = ($('#catPick input:checked') || {}).value || defaultCat();
+  if (!title) return formError('צריך לכתוב מה הפעילות.');
+  if (!start && !when) return formError('צריך שעת התחלה, או לכתוב במילים מתי.');
+  if (start && end){
+    const span = (toMin(end) - toMin(start) + 1440) % 1440;
+    if (span === 0) return formError('שעת הסיום זהה לשעת ההתחלה.');
+    if (span > 20 * 60) return formError('נראה ששעת הסיום לפני ההתחלה.');
+  }
+  const it = {};
+  if (start) it.start = normTime(start);
+  if (start && end) it.end = normTime(end);
+  if (!start) it.when = when;
+  it.title = title;
+  if (note) it.note = note;
+  it.cat = cat;
+  const ctx = edit;
+  const where = ctx.mode === 'day' ? `נשמר ל${dayLabel(ctx.key)} בלבד` : `נשמר בלו״ז הקבוע של יום ${WD[ctx.wd]}`;
+  applyToItems(ctx, items => { if (ctx.idx >= 0) items[ctx.idx] = it; else items.push(it); return items; }, where);
+  $('#sheet').close();
+});
+$('#fStart').addEventListener('input', syncTimeFields);
+$('#fStart').addEventListener('change', syncTimeFields);
+$$('[data-clear]').forEach(b => b.addEventListener('click', e => {
+  e.preventDefault();
+  $('#' + b.dataset.clear).value = '';
+  syncTimeFields();
+}));
+
+/* ---------- day options ---------- */
+function openDayOpts(){
+  const k = state.sel, p = dayPlan(k);
+  $('#doTitle').textContent = `אפשרויות ל${dayLabel(k)}`;
+  $('#doSub').value = p.subtitle || '';
+  $('#doReset').hidden = !p.changed;
+  $('#doWd').innerHTML = WDL.map((l, i) => `<button type="button" data-act="use-wd" data-wd="${i}" aria-label="${WD[i]}">${l}</button>`).join('');
+  $('#dayOpts').showModal();
+}
+$('#doSub').addEventListener('change', () => {
+  const k = state.sel, v = $('#doSub').value.trim();
+  mutate(() => { ensureOverride(k).subtitle = v; tidyOverride(k); }, 'התיאור של היום עודכן');
+  $('#doReset').hidden = !dayPlan(k).changed;
+});
+
+/* ---------- backup ---------- */
+function prettyJSON(obj){
+  const parts = [];
+  const text = JSON.stringify(obj, function (k, v){
+    if (v && typeof v === 'object' && !Array.isArray(v) && ('title' in v || ('id' in v && 'color' in v))){
+      parts.push(JSON.stringify(v));
+      return `\u0000${parts.length - 1}\u0000`;
+    }
+    return v;
+  }, 2);
+  return text.replace(/"\\u0000(\d+)\\u0000"/g, (_, i) => parts[i]);
+}
+function backupText(){
+  return prettyJSON({
+    app: 'yoman', version: 1, exportedAt: new Date().toISOString(),
+    categories: data.categories,
+    week: data.week.map((d, i) => ({day: WD[i], subtitle: d.subtitle, accent: d.accent, items: d.items})),
+    days: Object.fromEntries(Object.entries(data.days).sort(([a], [b]) => a < b ? -1 : 1)),
+    notes: data.notes
+  }) + '\n';
+}
+async function saveFile(text, name){
+  const blob = new Blob([text], {type: 'application/json'});
+  try {
+    const file = new File([blob], name, {type: 'application/json'});
+    if (matchMedia('(pointer: coarse)').matches && navigator.canShare && navigator.canShare({files: [file]})){
+      await navigator.share({files: [file], title: name});
+      return true;
+    }
+  } catch (err){
+    if (err && err.name === 'AbortError') return false;
+  }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  return true;
+}
+function markBackedUp(){ prefs.lastBackupAt = Date.now(); savePrefs(); renderMain(); renderPage(); }
+async function doExport(){
+  if (!data) return;
+  if (await saveFile(backupText(), `yoman-backup-${todayKey()}.json`)){
+    markBackedUp();
+    toast('קובץ הגיבוי נשמר');
+  }
+}
+async function doCopy(){
+  try {
+    await navigator.clipboard.writeText(backupText());
+    markBackedUp();
+    toast('הגיבוי הועתק. אפשר להדביק אותו בפתק או בהודעה לעצמך');
+  } catch { toast('ההעתקה לא הצליחה'); }
+}
+/* Returns an error message, or '' when loaded (or the person cancelled). */
+function importText(text){
+  let obj;
+  try { obj = JSON.parse(String(text).replace(/^\uFEFF/, '')); }
+  catch { return 'זה לא נראה כמו קובץ גיבוי של היומן.'; }
+  let nd;
+  try { nd = normalize(obj); }
+  catch { return 'הקובץ נקרא, אבל אין בו לו״ז שבועי של היומן.'; }
+  if (data && !confirm('לטעון את הגיבוי? הלו״ז שכרגע במכשיר יוחלף במה שבקובץ.')) return '';
+  corrupt = false;
+  state.follow = true;
+  mutate(() => { data = nd; }, 'הגיבוי נטען');
+  prefs.lastBackupAt = Date.now(); savePrefs();
+  renderMain();
+  askPersist();
+  return '';
+}
+$('#fileIn').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  const err = importText(await f.text());
+  if (err) toast(err);
+});
+
+/* ---------- toast ---------- */
+let toastTimer = 0;
+function toast(msg, undo){
+  const t = $('#toast');
+  t.innerHTML = `<span>${esc(msg)}</span>${undo ? '<button type="button">ביטול</button>' : ''}`;
+  if (undo) t.querySelector('button').addEventListener('click', () => { hideToast(); undo(); });
+  t.hidden = false;
+  requestAnimationFrame(() => t.classList.add('show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, undo ? 6000 : 3500);
+}
+function hideToast(){
+  const t = $('#toast');
+  t.classList.remove('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 220);
+}
+
+/* ---------- theme ---------- */
+function applyTheme(){
+  const r = document.documentElement;
+  if (prefs.theme === 'light' || prefs.theme === 'dark') r.dataset.theme = prefs.theme;
+  else delete r.dataset.theme;
+  const dark = prefs.theme === 'dark' || (prefs.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+  $('meta[name="theme-color"]').setAttribute('content', dark ? '#0D1524' : '#EDF1F5');
+  $$('#themeSeg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.setTheme === prefs.theme)));
+}
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+
+/* ---------- navigation ---------- */
+function selectDay(k){
+  state.sel = k;
+  state.follow = k === todayKey();
+  if (state.monthOpen) state.monthCursor = k.slice(0, 8) + '01';
+  renderMain();
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-act],[data-page],[data-jump],[data-k],[data-wd],[data-set-theme]');
+  if (!t) return;
+  const act = t.dataset.act;
+
+  if (t.dataset.page){ $('#drawer').close(); openPage(t.dataset.page); return; }
+  if (t.dataset.jump !== undefined){ selectDay(addDays(todayKey(), +t.dataset.jump)); return; }
+  if (t.dataset.setTheme){ prefs.theme = t.dataset.setTheme; savePrefs(); applyTheme(); return; }
+  if (t.dataset.k && !act){
+    const fromGrid = t.classList.contains('mg-cell');
+    if (fromGrid) state.monthOpen = false;
+    selectDay(t.dataset.k);
+    return;
+  }
+  if (t.dataset.wd !== undefined && !act){ state.fixedWd = +t.dataset.wd; renderPage(); return; }
+
+  const ci = t.closest('[data-ci]') ? +t.closest('[data-ci]').dataset.ci : -1;
+  switch (act){
+    case 'menu':
+      $('#drBackup').textContent = prefs.lastBackupAt ? `גיבוי אחרון: ${fmtStamp.format(new Date(prefs.lastBackupAt))}` : 'עוד לא נשמר גיבוי';
+      applyTheme();
+      $('#drawer').showModal();
+      break;
+    case 'close-dlg': t.closest('dialog').close(); break;
+    case 'page-back': closePage(); break;
+    case 'prev-week': selectDay(addDays(state.sel, -7)); break;
+    case 'next-week': selectDay(addDays(state.sel, 7)); break;
+    case 'prev-month': case 'next-month': {
+      const c = dateOf(state.monthCursor);
+      c.setMonth(c.getMonth() + (act === 'next-month' ? 1 : -1));
+      state.monthCursor = keyOf(c);
+      renderMonthGrid(todayKey());
+      break;
+    }
+    case 'add-day': openEditor({mode: 'day', key: state.sel, idx: -1}); break;
+    case 'add-fixed': openEditor({mode: 'fixed', wd: state.fixedWd, idx: -1}); break;
+    case 'day-opts': openDayOpts(); break;
+    case 'delete-item': {
+      const ctx = edit;
+      const msg = ctx.mode === 'day' ? `נמחק מ${dayLabel(ctx.key)}` : `נמחק מהלו״ז הקבוע של יום ${WD[ctx.wd]}`;
+      applyToItems(ctx, items => { items.splice(ctx.idx, 1); return items; }, msg);
+      $('#sheet').close();
+      break;
+    }
+    case 'reset-day': {
+      const k = state.sel;
+      mutate(() => { delete data.days[k]; }, `${dayLabel(k)} חזר ללו״ז הקבוע`);
+      if ($('#dayOpts').open) $('#dayOpts').close();
+      break;
+    }
+    case 'use-wd': {
+      const k = state.sel, w = +t.dataset.wd, src = data.week[w];
+      mutate(() => {
+        if (w === wdOf(k)) delete data.days[k];
+        else data.days[k] = {items: clone(src.items), subtitle: src.subtitle, accent: src.accent};
+      }, `${dayLabel(k)} לפי הלו״ז של יום ${WD[w]}`);
+      $('#dayOpts').close();
+      break;
+    }
+    case 'clear-day': {
+      const k = state.sel;
+      mutate(() => { data.days[k] = {items: [], subtitle: '', accent: ''}; }, `${dayLabel(k)} נוקה`);
+      $('#dayOpts').close();
+      break;
+    }
+    case 'copy-fixed': {
+      const w = state.fixedWd, src = +$('#fxCopyFrom').value;
+      mutate(() => { data.week[w].items = clone(data.week[src].items); }, `יום ${WD[w]} הועתק מיום ${WD[src]}`);
+      break;
+    }
+    case 'cat-color':
+      mutate(() => { data.categories[ci].color = t.dataset.color; });
+      break;
+    case 'cat-add':
+      mutate(() => { data.categories.push({id: 'c' + Date.now().toString(36), name: 'קטגוריה חדשה', color: 'blue'}); });
+      requestAnimationFrame(() => { const ins = $$('#pageBody [data-cf="name"]'); const last = ins[ins.length - 1]; if (last){ last.focus(); last.select(); } });
+      break;
+    case 'cat-del': {
+      const c = data.categories[ci];
+      const inUse = data.week.some(d => d.items.some(it => it.cat === c.id)) || Object.values(data.days).some(d => d.items.some(it => it.cat === c.id));
+      if (inUse){ toast('הקטגוריה בשימוש. קודם מעבירים את הפעילויות שלה לקטגוריה אחרת.'); break; }
+      if (data.categories.length <= 1){ toast('צריך לפחות קטגוריה אחת'); break; }
+      mutate(() => { data.categories.splice(ci, 1); }, `הקטגוריה ״${c.name}״ נמחקה`);
+      break;
+    }
+    case 'export': doExport(); break;
+    case 'copy': doCopy(); break;
+    case 'import-file': $('#fileIn').click(); break;
+    case 'import-paste':
+      $('#pasteText').value = '';
+      $('#pasteErr').hidden = true;
+      $('#pasteDlg').showModal();
+      break;
+    case 'paste-load': {
+      const err = importText($('#pasteText').value);
+      if (err){ $('#pasteErr').textContent = err; $('#pasteErr').hidden = false; }
+      else $('#pasteDlg').close();
+      break;
+    }
+    case 'start-blank':
+      mutate(() => { data = blankData(); }, 'התחלנו לו״ז ריק');
+      askPersist();
+      openPage('fixed');
+      break;
+    case 'wipe':
+      if (!confirm('למחוק את כל הלו״ז מהמכשיר? בלי קובץ גיבוי אי אפשר יהיה לשחזר.')) break;
+      mutate(() => { data = null; }, 'הכל נמחק');
+      closePage();
+      break;
+  }
+});
+
+$('#monthBtn').addEventListener('click', () => {
+  state.monthOpen = !state.monthOpen;
+  state.monthCursor = state.sel.slice(0, 8) + '01';
+  renderMain();
+});
+
+/* clicks on a timeline row open the editor */
+$('#timeline').addEventListener('click', e => {
+  const b = e.target.closest('.body');
+  if (b) openEditor({mode: 'day', key: state.sel, idx: +b.dataset.i});
+});
+$('#pageBody').addEventListener('click', e => {
+  const b = e.target.closest('#fxList .body');
+  if (b) openEditor({mode: 'fixed', wd: state.fixedWd, idx: +b.dataset.i});
+});
+
+/* text fields on pages save when you leave them */
+$('#pageBody').addEventListener('change', e => {
+  const t = e.target;
+  if (t.dataset.fx){
+    const w = state.fixedWd, f = t.dataset.fx, v = t.value.trim();
+    if (f === 'notes') mutate(() => { data.notes = v; }, null, {page: false});
+    else mutate(() => { data.week[w][f] = v; }, null, {page: f !== 'subtitle'});
+  } else if (t.dataset.cf){
+    const ci = +t.closest('[data-ci]').dataset.ci, f = t.dataset.cf;
+    if (f === 'name') mutate(() => { data.categories[ci].name = t.value.trim() || data.categories[ci].name; }, null, {page: false});
+    else mutate(() => { if (t.checked) data.categories[ci][f] = true; else delete data.categories[ci][f]; }, null, {page: false});
+  }
+});
+
+/* tap outside a dialog closes it */
+$$('dialog').forEach(d => d.addEventListener('click', e => { if (e.target === d) d.close(); }));
+
+/* swipe between days (RTL: swipe right = forward) */
+{
+  let x0 = 0, y0 = 0, on = false;
+  const zone = $('#dayView');
+  zone.addEventListener('touchstart', e => { const p = e.touches[0]; x0 = p.clientX; y0 = p.clientY; on = e.touches.length === 1; }, {passive: true});
+  zone.addEventListener('touchend', e => {
+    if (!on) return;
+    on = false;
+    const p = e.changedTouches[0], dx = p.clientX - x0, dy = p.clientY - y0;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) selectDay(addDays(state.sel, dx > 0 ? 1 : -1));
+  }, {passive: true});
+  const strip = $('#weekbar');
+  strip.addEventListener('touchstart', e => { const p = e.touches[0]; x0 = p.clientX; y0 = p.clientY; on = true; }, {passive: true});
+  strip.addEventListener('touchend', e => {
+    if (!on) return;
+    on = false;
+    const p = e.changedTouches[0], dx = p.clientX - x0, dy = p.clientY - y0;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) selectDay(addDays(state.sel, dx > 0 ? 7 : -7));
+  }, {passive: true});
+}
+
+/* keyboard: arrows move between days */
+document.addEventListener('keydown', e => {
+  if (!data || state.page || document.querySelector('dialog[open]')) return;
+  if (/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName)) return;
+  if (e.key === 'ArrowLeft') selectDay(addDays(state.sel, 1));
+  else if (e.key === 'ArrowRight') selectDay(addDays(state.sel, -1));
+});
+
+/* ---------- start ---------- */
+if (history.state && history.state.page) { try { history.replaceState(null, ''); } catch {} }
+renderMain();
+setInterval(renderMain, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) renderMain(); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){
+  window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });
+}
+})();
+</script>
+</body>
+</html>
